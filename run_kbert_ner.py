@@ -9,7 +9,7 @@ import torch.nn as nn
 from torch.nn import CrossEntropyLoss
 from uer.model_builder import build_model
 from uer.utils.config import load_hyperparam
-from uer.utils.optimizers import  BertAdam
+from uer.utils.optimizers import BertAdam
 from uer.utils.constants import *
 from uer.utils.vocab import Vocab
 from uer.utils.seed import set_seed
@@ -51,11 +51,11 @@ class BertTagger(nn.Module):
         output = output.contiguous().view(-1, self.labels_num)
         output = self.softmax(output)
 
-        label = label.contiguous().view(-1,1)
+        label = label.contiguous().view(-1, 1)
         label_mask = (label > 0).float().to(torch.device(label.device))
-        one_hot = torch.zeros(label_mask.size(0),  self.labels_num). \
-                  to(torch.device(label.device)). \
-                  scatter_(1, label, 1.0)
+        one_hot = (
+            torch.zeros(label_mask.size(0), self.labels_num).to(torch.device(label.device)).scatter_(1, label, 1.0)
+        )
 
         numerator = -torch.sum(output * one_hot, 1)
         label_mask = label_mask.contiguous().view(-1)
@@ -64,72 +64,75 @@ class BertTagger(nn.Module):
         denominator = torch.sum(label_mask) + 1e-6
         loss = numerator / denominator
         predict = output.argmax(dim=-1)
-        correct = torch.sum(
-            label_mask * (predict.eq(label)).float()
-        )
-        
+        correct = torch.sum(label_mask * (predict.eq(label)).float())
+
         return loss, correct, predict, label
 
 
-def main():
+def main(special_args=None):
+
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     # Path options.
-    parser.add_argument("--pretrained_model_path", default=None, type=str,
-                        help="Path of the pretrained model.")
-    parser.add_argument("--output_model_path", default="./models/tagger_model.bin", type=str,
-                        help="Path of the output model.")
-    parser.add_argument("--vocab_path", default="./models/google_vocab.txt", type=str,
-                        help="Path of the vocabulary file.")
-    parser.add_argument("--train_path", type=str, required=True,
-                        help="Path of the trainset.")
-    parser.add_argument("--dev_path", type=str, required=True,
-                        help="Path of the devset.")
-    parser.add_argument("--test_path", type=str, required=True,
-                        help="Path of the testset.")
-    parser.add_argument("--config_path", default="./models/google_config.json", type=str,
-                        help="Path of the config file.")
+    parser.add_argument("--pretrained_model_path", default=None, type=str, help="Path of the pretrained model.")
+    parser.add_argument(
+        "--output_model_path", default="./models/tagger_model.bin", type=str, help="Path of the output model."
+    )
+    parser.add_argument(
+        "--vocab_path", default="./models/google_vocab.txt", type=str, help="Path of the vocabulary file."
+    )
+    parser.add_argument("--train_path", type=str, default=None, help="Path of the trainset.")
+    parser.add_argument("--dev_path", type=str, default=None, help="Path of the devset.")
+    parser.add_argument("--test_path", type=str, default=None, help="Path of the testset.")
+    parser.add_argument(
+        "--config_path", default="./models/google_config.json", type=str, help="Path of the config file."
+    )
 
     # Model options.
-    parser.add_argument("--batch_size", type=int, default=16,
-                        help="Batch_size.")
-    parser.add_argument("--seq_length", default=256, type=int,
-                        help="Sequence length.")
-    parser.add_argument("--encoder", choices=["bert", "lstm", "gru", \
-                                                   "cnn", "gatedcnn", "attn", \
-                                                   "rcnn", "crnn", "gpt", "bilstm"], \
-                                                   default="bert", help="Encoder type.")
+    parser.add_argument("--batch_size", type=int, default=16, help="Batch_size.")
+    parser.add_argument("--seq_length", default=256, type=int, help="Sequence length.")
+    parser.add_argument(
+        "--encoder",
+        choices=["bert", "lstm", "gru", "cnn", "gatedcnn", "attn", "rcnn", "crnn", "gpt", "bilstm"],
+        default="bert",
+        help="Encoder type.",
+    )
     parser.add_argument("--bidirectional", action="store_true", help="Specific to recurrent model.")
-    
+
     # Subword options.
-    parser.add_argument("--subword_type", choices=["none", "char"], default="none",
-                        help="Subword feature type.")
-    parser.add_argument("--sub_vocab_path", type=str, default="models/sub_vocab.txt",
-                        help="Path of the subword vocabulary file.")
-    parser.add_argument("--subencoder", choices=["avg", "lstm", "gru", "cnn"], default="avg",
-                        help="Subencoder type.")
+    parser.add_argument("--subword_type", choices=["none", "char"], default="none", help="Subword feature type.")
+    parser.add_argument(
+        "--sub_vocab_path", type=str, default="models/sub_vocab.txt", help="Path of the subword vocabulary file."
+    )
+    parser.add_argument("--subencoder", choices=["avg", "lstm", "gru", "cnn"], default="avg", help="Subencoder type.")
     parser.add_argument("--sub_layers_num", type=int, default=2, help="The number of subencoder layers.")
 
     # Optimizer options.
-    parser.add_argument("--learning_rate", type=float, default=2e-5,
-                        help="Learning rate.")
-    parser.add_argument("--warmup", type=float, default=0.1,
-                        help="Warm up value.")
+    parser.add_argument("--learning_rate", type=float, default=2e-5, help="Learning rate.")
+    parser.add_argument("--warmup", type=float, default=0.1, help="Warm up value.")
 
     # Training options.
-    parser.add_argument("--dropout", type=float, default=0.1,
-                        help="Dropout.")
-    parser.add_argument("--epochs_num", type=int, default=5,
-                        help="Number of epochs.")
-    parser.add_argument("--report_steps", type=int, default=100,
-                        help="Specific steps to print prompt.")
-    parser.add_argument("--seed", type=int, default=7,
-                        help="Random seed.")
+    parser.add_argument("--dropout", type=float, default=0.1, help="Dropout.")
+    parser.add_argument("--epochs_num", type=int, default=5, help="Number of epochs.")
+    parser.add_argument("--report_steps", type=int, default=100, help="Specific steps to print prompt.")
+    parser.add_argument("--seed", type=int, default=7, help="Random seed.")
 
     # kg
-    parser.add_argument("--kg_name", required=True, help="KG name or path")
+    parser.add_argument("--kg_name", default=None, help="KG name or path")
 
     args = parser.parse_args()
+
+    if special_args is not None:
+        args.pretrained_model_path = special_args.pretrained_model_path
+        args.config_path = special_args.config_path
+        args.vocab_path = special_args.vocab_path
+        args.train_path = special_args.train_path
+        args.dev_path = special_args.dev_path
+        args.test_path = special_args.test_path
+        args.epochs_num = special_args.epochs_num
+        args.batch_size = special_args.batch_size
+        args.kg_name = special_args.kg_name
+        args.output_model_path = special_args.output_model_path
 
     # Load the hyperparameters of the config file.
     args = load_hyperparam(args)
@@ -150,7 +153,7 @@ def main():
                     if l.startswith("B") or l.startswith("S"):
                         begin_ids.append(len(labels_map))
                     labels_map[l] = len(labels_map)
-    
+
     print("Labels: ", labels_map)
     args.labels_num = len(labels_map)
 
@@ -160,7 +163,7 @@ def main():
     args.vocab = vocab
 
     # Build knowledge graph.
-    if args.kg_name == 'none':
+    if args.kg_name == "none":
         spo_files = []
     else:
         spo_files = [args.kg_name]
@@ -174,13 +177,13 @@ def main():
     # Load or initialize parameters.
     if args.pretrained_model_path is not None:
         # Initialize with pretrained model.
-        model.load_state_dict(torch.load(args.pretrained_model_path), strict=False)  
+        model.load_state_dict(torch.load(args.pretrained_model_path), strict=False)
     else:
         # Initialize with normal distribution.
         for n, p in list(model.named_parameters()):
-            if 'gamma' not in n and 'beta' not in n:
+            if "gamma" not in n and "beta" not in n:
                 p.data.normal_(0, 0.02)
-    
+
     # Build sequence labeling model.
     model = BertTagger(args, model)
 
@@ -196,20 +199,20 @@ def main():
     def batch_loader(batch_size, input_ids, label_ids, mask_ids, pos_ids, vm_ids, tag_ids):
         instances_num = input_ids.size()[0]
         for i in range(instances_num // batch_size):
-            input_ids_batch = input_ids[i*batch_size: (i+1)*batch_size, :]
-            label_ids_batch = label_ids[i*batch_size: (i+1)*batch_size, :]
-            mask_ids_batch = mask_ids[i*batch_size: (i+1)*batch_size, :]
-            pos_ids_batch = pos_ids[i*batch_size: (i+1)*batch_size, :]
-            vm_ids_batch = vm_ids[i*batch_size: (i+1)*batch_size, :, :]
-            tag_ids_batch = tag_ids[i*batch_size: (i+1)*batch_size, :]
+            input_ids_batch = input_ids[i * batch_size : (i + 1) * batch_size, :]
+            label_ids_batch = label_ids[i * batch_size : (i + 1) * batch_size, :]
+            mask_ids_batch = mask_ids[i * batch_size : (i + 1) * batch_size, :]
+            pos_ids_batch = pos_ids[i * batch_size : (i + 1) * batch_size, :]
+            vm_ids_batch = vm_ids[i * batch_size : (i + 1) * batch_size, :, :]
+            tag_ids_batch = tag_ids[i * batch_size : (i + 1) * batch_size, :]
             yield input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vm_ids_batch, tag_ids_batch
         if instances_num > instances_num // batch_size * batch_size:
-            input_ids_batch = input_ids[instances_num//batch_size*batch_size:, :]
-            label_ids_batch = label_ids[instances_num//batch_size*batch_size:, :]
-            mask_ids_batch = mask_ids[instances_num//batch_size*batch_size:, :]
-            pos_ids_batch = pos_ids[instances_num//batch_size*batch_size:, :]
-            vm_ids_batch = vm_ids[instances_num//batch_size*batch_size:, :, :]
-            tag_ids_batch = tag_ids[instances_num//batch_size*batch_size:, :]
+            input_ids_batch = input_ids[instances_num // batch_size * batch_size :, :]
+            label_ids_batch = label_ids[instances_num // batch_size * batch_size :, :]
+            mask_ids_batch = mask_ids[instances_num // batch_size * batch_size :, :]
+            pos_ids_batch = pos_ids[instances_num // batch_size * batch_size :, :]
+            vm_ids_batch = vm_ids[instances_num // batch_size * batch_size :, :, :]
+            tag_ids_batch = tag_ids[instances_num // batch_size * batch_size :, :]
             yield input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vm_ids_batch, tag_ids_batch
 
     # Read dataset.
@@ -221,7 +224,7 @@ def main():
             for line_id, line in enumerate(f):
                 tokens, labels = line.strip().split("\t")
 
-                text = ''.join(tokens.split(" "))
+                text = "".join(tokens.split(" "))
                 tokens, pos, vm, tag = kg.add_knowledge_with_vm([text], add_pad=True, max_length=args.seq_length)
                 tokens = tokens[0]
                 pos = pos[0]
@@ -239,12 +242,12 @@ def main():
                         new_labels.append(labels[j])
                         j += 1
                     elif tag[i] == 1 and tokens[i] != PAD_ID:  # 是添加的实体
-                        new_labels.append(labels_map['[ENT]'])
+                        new_labels.append(labels_map["[ENT]"])
                     else:
                         new_labels.append(labels_map[PAD_TOKEN])
 
                 dataset.append([tokens, new_labels, mask, pos, vm, tag])
-        
+
         return dataset
 
     # Evaluation function.
@@ -267,7 +270,7 @@ def main():
         if is_test:
             print("Batch size: ", batch_size)
             print("The number of test instances:", instances_num)
- 
+
         correct = 0
         gold_entities_num = 0
         pred_entities_num = 0
@@ -276,7 +279,14 @@ def main():
 
         model.eval()
 
-        for i, (input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vm_ids_batch, tag_ids_batch) in enumerate(batch_loader(batch_size, input_ids, label_ids, mask_ids, pos_ids, vm_ids, tag_ids)):
+        for i, (
+            input_ids_batch,
+            label_ids_batch,
+            mask_ids_batch,
+            pos_ids_batch,
+            vm_ids_batch,
+            tag_ids_batch,
+        ) in enumerate(batch_loader(batch_size, input_ids, label_ids, mask_ids, pos_ids, vm_ids, tag_ids)):
 
             input_ids_batch = input_ids_batch.to(device)
             label_ids_batch = label_ids_batch.to(device)
@@ -286,11 +296,11 @@ def main():
             vm_ids_batch = vm_ids_batch.long().to(device)
 
             loss, _, pred, gold = model(input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vm_ids_batch)
-            
+
             for j in range(gold.size()[0]):
                 if gold[j].item() in begin_ids:
                     gold_entities_num += 1
- 
+
             for j in range(pred.size()[0]):
                 if pred[j].item() in begin_ids and gold[j].item() != labels_map["[PAD]"]:
                     pred_entities_num += 1
@@ -302,27 +312,39 @@ def main():
             for j in range(gold.size()[0]):
                 if gold[j].item() in begin_ids:
                     start = j
-                    for k in range(j+1, gold.size()[0]):
-                        
-                        if gold[k].item() == labels_map['[ENT]']:
+                    for k in range(j + 1, gold.size()[0]):
+
+                        if gold[k].item() == labels_map["[ENT]"]:
                             continue
 
-                        if gold[k].item() == labels_map["[PAD]"] or gold[k].item() == labels_map["O"] or gold[k].item() in begin_ids:
+                        if (
+                            gold[k].item() == labels_map["[PAD]"]
+                            or gold[k].item() == labels_map["O"]
+                            or gold[k].item() in begin_ids
+                        ):
                             end = k - 1
                             break
                     else:
                         end = gold.size()[0] - 1
                     gold_entities_pos.append((start, end))
-            
-            for j in range(pred.size()[0]):
-                if pred[j].item() in begin_ids and gold[j].item() != labels_map["[PAD]"] and gold[j].item() != labels_map["[ENT]"]:
-                    start = j
-                    for k in range(j+1, pred.size()[0]):
 
-                        if gold[k].item() == labels_map['[ENT]']:
+            for j in range(pred.size()[0]):
+                if (
+                    pred[j].item() in begin_ids
+                    and gold[j].item() != labels_map["[PAD]"]
+                    and gold[j].item() != labels_map["[ENT]"]
+                ):
+                    start = j
+                    for k in range(j + 1, pred.size()[0]):
+
+                        if gold[k].item() == labels_map["[ENT]"]:
                             continue
 
-                        if pred[k].item() == labels_map["[PAD]"] or pred[k].item() == labels_map["O"] or pred[k].item() in begin_ids:
+                        if (
+                            pred[k].item() == labels_map["[PAD]"]
+                            or pred[k].item() == labels_map["O"]
+                            or pred[k].item() in begin_ids
+                        ):
                             end = k - 1
                             break
                     else:
@@ -332,14 +354,14 @@ def main():
             for entity in pred_entities_pos:
                 if entity not in gold_entities_pos:
                     continue
-                else: 
+                else:
                     correct += 1
 
         print("Report precision, recall, and f1:")
-        p = correct/pred_entities_num
-        r = correct/gold_entities_num
-        f1 = 2*p*r/(p+r)
-        print("{:.3f}, {:.3f}, {:.3f}".format(p,r,f1))
+        p = correct / pred_entities_num
+        r = correct / gold_entities_num
+        f1 = 2 * p * r / (p + r)
+        print("{:.3f}, {:.3f}, {:.3f}".format(p, r, f1))
 
         return f1
 
@@ -362,20 +384,27 @@ def main():
     print("The number of training instances:", instances_num)
 
     param_optimizer = list(model.named_parameters())
-    no_decay = ['bias', 'gamma', 'beta']
+    no_decay = ["bias", "gamma", "beta"]
     optimizer_grouped_parameters = [
-                {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay_rate': 0.01},
-                {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay_rate': 0.0}
+        {"params": [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], "weight_decay_rate": 0.01},
+        {"params": [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], "weight_decay_rate": 0.0},
     ]
     optimizer = BertAdam(optimizer_grouped_parameters, lr=args.learning_rate, warmup=args.warmup, t_total=train_steps)
 
-    total_loss = 0.
+    total_loss = 0.0
     f1 = 0.0
     best_f1 = 0.0
 
-    for epoch in range(1, args.epochs_num+1):
+    for epoch in range(1, args.epochs_num + 1):
         model.train()
-        for i, (input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vm_ids_batch, tag_ids_batch) in enumerate(batch_loader(batch_size, input_ids, label_ids, mask_ids, pos_ids, vm_ids, tag_ids)):
+        for i, (
+            input_ids_batch,
+            label_ids_batch,
+            mask_ids_batch,
+            pos_ids_batch,
+            vm_ids_batch,
+            tag_ids_batch,
+        ) in enumerate(batch_loader(batch_size, input_ids, label_ids, mask_ids, pos_ids, vm_ids, tag_ids)):
             model.zero_grad()
 
             input_ids_batch = input_ids_batch.to(device)
@@ -390,8 +419,12 @@ def main():
                 loss = torch.mean(loss)
             total_loss += loss.item()
             if (i + 1) % args.report_steps == 0:
-                print("Epoch id: {}, Training steps: {}, Avg loss: {:.3f}".format(epoch, i+1, total_loss / args.report_steps))
-                total_loss = 0.
+                print(
+                    "Epoch id: {}, Training steps: {}, Avg loss: {:.3f}".format(
+                        epoch, i + 1, total_loss / args.report_steps
+                    )
+                )
+                total_loss = 0.0
 
             loss.backward()
             optimizer.step()

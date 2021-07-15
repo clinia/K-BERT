@@ -1,0 +1,61 @@
+[tool.poetry]
+name = "K-BERT"
+# The version listed here is just a placeholder, the real package version is derived from the github release tag
+# When the package is installed from gemfury, the real version is used
+version = "0.1.0-dev"
+
+description = "Python library related to query semantics"
+authors = [
+    "Etienne Soulard-Geoffrion <etienne.soulard-geoffrion@clinia.com>",
+    "Daniel Buades Marcos <daniel.buades@clinia.com>",
+    "Alexandre Duperré <alexandre.duperre@clinia.com>"
+]
+
+[tool.poetry.dependencies]
+python = "^3.8.6,<3.9"
+Unidecode = "^1.2.0"
+PyYAML = "^5.4.1"
+pandas = "^1.2.4"
+bioc = "^1.3.6"
+search-utils = { version = "^0.1.0", source = "clinia" }
+
+torch = "^1.8.1"
+transformers = "^4.5.1"
+rapidfuzz = "^1.4.1"
+tensorboard = "^2.5.0"
+
+# If we bump the BentoML version, remember to check if something changed in both Dockerfile and entrypoint.sh at docker/bentoml-base
+# Also, remember to change the workflow's ENV variables and re-run it at: .github/workflows/bentoml-base.yml
+lit-nlp = "^0.3"
+BentoML = "0.12.1"
+seaborn = "^0.11.1"
+pkuseg = "^0.0.25"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+pytest-cov = "^2.11.1"
+isort = "^5.8.0"
+black = "^21.5b0"
+flake8 = "^3.9.1"
+pre-commit = "^2.12.1"
+pre-commit-hooks = "^3.4.0"
+pynvml = "^8.0.4"
+
+dvc = {extras = ["s3"], version = "^2.3.0"}
+
+[[tool.poetry.source]]
+name = "clinia"
+url = "https://pypi.fury.io/clinia"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+## Imports and formatting
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+
+[tool.black]
+line-length = 120
