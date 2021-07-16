@@ -15,6 +15,8 @@ from uer.utils.vocab import Vocab
 from uer.utils.seed import set_seed
 from uer.model_saver import save_model
 import numpy as np
+import pandas as pd
+from ast import literal_eval
 
 from brain import KnowledgeGraph
 
@@ -120,6 +122,10 @@ def main(special_args=None):
     # kg
     parser.add_argument("--kg_name", default=None, help="KG name or path")
 
+    # tokenizer
+    parser.add_argument("--tokenizer_config", default=None, help="Tokenizer config if english corpus")
+    parser.add_argument("--tokenizer", default=None, help="Tokenizer path if english corpus")
+
     args = parser.parse_args()
 
     if special_args is not None:
@@ -133,6 +139,7 @@ def main(special_args=None):
         args.batch_size = special_args.batch_size
         args.kg_name = special_args.kg_name
         args.output_model_path = special_args.output_model_path
+        args.labels_path = special_args.labels_path
 
     # Load the hyperparameters of the config file.
     args = load_hyperparam(args)
@@ -142,17 +149,27 @@ def main(special_args=None):
     labels_map = {"[PAD]": 0, "[ENT]": 1}
     begin_ids = []
 
-    # Find tagging labels
-    with open(args.train_path, mode="r", encoding="utf-8") as f:
-        for line_id, line in enumerate(f):
-            if line_id == 0:
-                continue
-            labels = line.strip().split("\t")[1].split()
-            for l in labels:
-                if l not in labels_map:
-                    if l.startswith("B") or l.startswith("S"):
-                        begin_ids.append(len(labels_map))
-                    labels_map[l] = len(labels_map)
+    # Find tagging labels & set language
+    lang = None
+    if args.train_path.endswith(".tsv"):
+        lang = "chi"
+        with open(args.train_path, mode="r", encoding="utf-8") as f:
+            for line_id, line in enumerate(f):
+                if line_id == 0:
+                    continue
+                labels = line.strip().split("\t")[1].split()
+                for l in labels:
+                    if l not in labels_map:
+                        if l.startswith("B") or l.startswith("S"):
+                            begin_ids.append(len(labels_map))
+                        labels_map[l] = len(labels_map)
+    elif args.train_path.endswith(".csv"):
+        lang = "en"
+        labels = pd.read_csv(args.labels_path, index_col=0, names=["id", "label"], header=None).label.to_list()
+        for label in labels:
+            if label.startswith("B") or label.startswith("S"):
+                begin_ids.append(len(labels_map))
+            labels_map[label] = len(labels_map)
 
     print("Labels: ", labels_map)
     args.labels_num = len(labels_map)
@@ -167,7 +184,7 @@ def main(special_args=None):
         spo_files = []
     else:
         spo_files = [args.kg_name]
-    kg = KnowledgeGraph(spo_files=spo_files, predicate=False)
+    kg = KnowledgeGraph(spo_files=spo_files, predicate=False, lang=lang)
 
     # Build bert model.
     # A pseudo target is added.
@@ -218,14 +235,46 @@ def main(special_args=None):
     # Read dataset.
     def read_dataset(path):
         dataset = []
-        with open(path, mode="r", encoding="utf-8") as f:
-            f.readline()
-            tokens, labels = [], []
-            for line_id, line in enumerate(f):
-                tokens, labels = line.strip().split("\t")
+        if path.endswith(".tsv"):
 
-                text = "".join(tokens.split(" "))
-                tokens, pos, vm, tag = kg.add_knowledge_with_vm([text], add_pad=True, max_length=args.seq_length)
+            with open(path, mode="r", encoding="utf-8") as f:
+                f.readline()
+                tokens, labels = [], []
+                for line_id, line in enumerate(f):
+                    tokens, labels = line.strip().split("\t")
+
+                    text = "".join(tokens.split(" "))
+                    tokens, pos, vm, tag = kg.add_knowledge_with_vm([text], add_pad=True, max_length=args.seq_length)
+                    tokens = tokens[0]
+                    pos = pos[0]
+                    vm = vm[0].astype("bool")
+                    tag = tag[0]
+
+                    tokens = [vocab.get(t) for t in tokens]
+                    labels = [labels_map[l] for l in labels.split(" ")]
+                    mask = [1] * len(tokens)
+
+                    new_labels = []
+                    j = 0
+                    for i in range(len(tokens)):
+                        if tag[i] == 0 and tokens[i] != PAD_ID:
+                            new_labels.append(labels[j])
+                            j += 1
+                        elif tag[i] == 1 and tokens[i] != PAD_ID:  # 是添加的实体
+                            new_labels.append(labels_map["[ENT]"])
+                        else:
+                            new_labels.append(labels_map[PAD_TOKEN])
+
+                    dataset.append([tokens, new_labels, mask, pos, vm, tag])
+
+        elif path.endswith(".csv"):
+            dataset = pd.read_csv(path, index_col=0, header=0, engine="python")
+            dataset = dataset.applymap(lambda x: literal_eval(x))
+            for i in range(len(dataset)):
+                text = dataset.loc[i, "text"]
+                labels = dataset.loc[i, "tag"]
+
+                tokens, pos, vm, tag = kg.add_knowledge_with_vm_en([text], add_pad=True, max_length=args.seq_length)
                 tokens = tokens[0]
                 pos = pos[0]
                 vm = vm[0].astype("bool")
