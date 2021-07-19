@@ -6,7 +6,7 @@ import os
 import brain.config as config
 import pkuseg
 import numpy as np
-from transformers import BertTokenizer
+from transformers import AutoTokenizer
 
 
 class KnowledgeGraph(object):
@@ -22,8 +22,10 @@ class KnowledgeGraph(object):
         if lang == "chi":
             self.tokenizer = pkuseg.pkuseg(model_name="default", postag=False, user_dict=self.segment_vocab)
         elif lang == "en":
-            self.tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+            self.tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased", use_fast=True)
         self.special_tags = set(config.NEVER_SPLIT_TAG)
+
+        self.n_ent_found = 0
 
     def _create_lookup_table(self):
         lookup_table = {}
@@ -69,7 +71,9 @@ class KnowledgeGraph(object):
             abs_idx_src = []
             for token in split_sent:
 
-                entities = list(self.lookup_table.get(token, []))[:max_entities]
+                entities = list(self.lookup_table.get(token, []))
+                self.n_ent_found += len(entities)
+                entities = entities[:max_entities]
                 sent_tree.append((token, entities))
 
                 if token in self.special_tags:
@@ -148,7 +152,9 @@ class KnowledgeGraph(object):
 
         return know_sent_batch, position_batch, visible_matrix_batch, seg_batch
 
-    def add_knowledge_with_vm_en(self, sent_batch, max_entities=config.MAX_ENTITIES, add_pad=True, max_length=128):
+    def add_knowledge_with_vm_en(
+        self, sent_batch, labels_batch, max_entities=config.MAX_ENTITIES, add_pad=True, max_length=128
+    ):
         """
         input: sent_batch - list of sentences, e.g., ["abcd", "efgh"]
         return: know_sent_batch - list of sentences with entites embedding
@@ -161,7 +167,8 @@ class KnowledgeGraph(object):
         position_batch = []
         visible_matrix_batch = []
         seg_batch = []
-        for sent in sent_batch:
+        new_labels_batch = []
+        for sent, labels in zip(sent_batch, labels_batch):
 
             # create tree
             sent_tree = []
@@ -170,10 +177,21 @@ class KnowledgeGraph(object):
             pos_idx = -1
             abs_idx = -1
             abs_idx_src = []
-            for word in sent:
+            new_labels = []
+            for word, label in zip(sent, labels):
 
-                entities = list(self.lookup_table.get(word, []))[:max_entities]
+                entities = list(self.lookup_table.get(word, []))
+                self.n_ent_found += len(entities)
+                entities = entities[:max_entities]
                 tokens = self.tokenizer.tokenize(word)
+                # Handle case where word cannot be tokenized (\xad, etc)
+                if not tokens:
+                    tokens = [word]
+
+                # Adjust labels to to consider sub-word mapping
+                new_labels.append(label)
+                if len(tokens) > 1:
+                    new_labels.extend(["O"] * (len(tokens) - 1))
                 entity_tokens = [self.tokenizer.tokenize(entity) for entity in entities]
                 sent_tree.append((tokens, entity_tokens))
 
@@ -205,18 +223,13 @@ class KnowledgeGraph(object):
             seg = []
             for i in range(len(sent_tree)):
                 word = sent_tree[i][0]
-                if word in self.special_tags:
-                    know_sent += [word]
-                    seg += [0]
-                else:
-                    add_word = list(word)
-                    know_sent += add_word
-                    seg += [0] * len(add_word)
+
+                know_sent += word
+                seg += [0] * len(word)
                 pos += pos_idx_tree[i][0]
-                for j in range(len(sent_tree[i][1])):
-                    add_word = list(sent_tree[i][1][j])
-                    know_sent += add_word
-                    seg += [1] * len(add_word)
+                for j, ent in enumerate(sent_tree[i][1]):
+                    know_sent.extend(ent)
+                    seg += [1] * len(ent)
                     pos += list(pos_idx_tree[i][1][j])
 
             token_num = len(know_sent)
@@ -250,5 +263,6 @@ class KnowledgeGraph(object):
             position_batch.append(pos)
             visible_matrix_batch.append(visible_matrix)
             seg_batch.append(seg)
+            new_labels_batch.append(new_labels)
 
-        return know_sent_batch, position_batch, visible_matrix_batch, seg_batch
+        return know_sent_batch, position_batch, visible_matrix_batch, seg_batch, new_labels_batch
