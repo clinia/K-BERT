@@ -6,6 +6,7 @@ import random
 import argparse
 import torch
 import torch.nn as nn
+from torch.utils.data import DataLoader
 from torch.nn import CrossEntropyLoss
 from uer.model_builder import build_model
 from uer.utils.config import load_hyperparam
@@ -19,6 +20,7 @@ import pandas as pd
 from ast import literal_eval
 
 from brain import KnowledgeGraph
+from datasets.dataset import NERInjectDataset
 
 
 class BertTagger(nn.Module):
@@ -306,20 +308,20 @@ def main(special_args=None):
         return dataset
 
     # Evaluation function.
-    def evaluate(args, is_test):
-        if is_test:
-            dataset = read_dataset(args.test_path)
-        else:
-            dataset = read_dataset(args.dev_path)
+    def evaluate(data_loader, args, is_test):
+        # if is_test:
+        #     dataset = read_dataset(args.test_path)
+        # else:
+        #     dataset = read_dataset(args.dev_path)
 
-        input_ids = torch.LongTensor([sample[0] for sample in dataset])
-        label_ids = torch.LongTensor([sample[1] for sample in dataset])
-        mask_ids = torch.LongTensor([sample[2] for sample in dataset])
-        pos_ids = torch.LongTensor([sample[3] for sample in dataset])
-        vm_ids = torch.BoolTensor([sample[4] for sample in dataset])
-        tag_ids = torch.LongTensor([sample[5] for sample in dataset])
+        # input_ids = torch.LongTensor([sample[0] for sample in dataset])
+        # label_ids = torch.LongTensor([sample[1] for sample in dataset])
+        # mask_ids = torch.LongTensor([sample[2] for sample in dataset])
+        # pos_ids = torch.LongTensor([sample[3] for sample in dataset])
+        # vm_ids = torch.BoolTensor([sample[4] for sample in dataset])
+        # tag_ids = torch.LongTensor([sample[5] for sample in dataset])
 
-        instances_num = input_ids.size(0)
+        instances_num = len(data_loader) * args.batch_size
         batch_size = args.batch_size
 
         if is_test:
@@ -341,7 +343,7 @@ def main(special_args=None):
             pos_ids_batch,
             vm_ids_batch,
             tag_ids_batch,
-        ) in enumerate(batch_loader(batch_size, input_ids, label_ids, mask_ids, pos_ids, vm_ids, tag_ids)):
+        ) in enumerate(data_loader):
 
             input_ids_batch = input_ids_batch.to(device)
             label_ids_batch = label_ids_batch.to(device)
@@ -421,20 +423,35 @@ def main(special_args=None):
         return f1
 
     # Training phase.
-    print("Start training.")
-    instances = read_dataset(args.train_path)
+    print("Building datasets.")
+    # instances = read_dataset(args.train_path)
 
-    input_ids = torch.LongTensor([ins[0] for ins in instances])
-    label_ids = torch.LongTensor([ins[1] for ins in instances])
-    mask_ids = torch.LongTensor([ins[2] for ins in instances])
-    pos_ids = torch.LongTensor([ins[3] for ins in instances])
-    vm_ids = torch.BoolTensor([ins[4] for ins in instances])
-    tag_ids = torch.LongTensor([ins[5] for ins in instances])
+    # input_ids = torch.LongTensor([ins[0] for ins in instances])
+    # label_ids = torch.LongTensor([ins[1] for ins in instances])
+    # mask_ids = torch.LongTensor([ins[2] for ins in instances])
+    # pos_ids = torch.LongTensor([ins[3] for ins in instances])
+    # vm_ids = torch.BoolTensor([ins[4] for ins in instances])
+    # tag_ids = torch.LongTensor([ins[5] for ins in instances])
 
-    instances_num = input_ids.size(0)
+    # Set up datasets
+    train_dataset = NERInjectDataset(
+        args.train_path, kg=kg, vocab=vocab, labels_map=labels_map, max_length=args.seq_length
+    )
+    dev_dataset = NERInjectDataset(args.dev_path, kg=kg, vocab=vocab, labels_map=labels_map, max_length=args.seq_length)
+    # test_dataset = NERInjectDataset(
+    #     args.test_path, kg=kg, vocab=vocab, labels_map=labels_map, max_length=args.seq_length
+    # )
+
+    instances_num = len(train_dataset)
     batch_size = args.batch_size
     train_steps = int(instances_num * args.epochs_num / batch_size) + 1
 
+    # Create dataloaders
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    # dev_loader = DataLoader(dev_dataset, batch_size=batch_size, shuffle=True)
+    # test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
+
+    print("Start training.")
     print("Batch size: ", batch_size)
     print("The number of training instances:", instances_num)
 
@@ -459,7 +476,7 @@ def main(special_args=None):
             pos_ids_batch,
             vm_ids_batch,
             tag_ids_batch,
-        ) in enumerate(batch_loader(batch_size, input_ids, label_ids, mask_ids, pos_ids, vm_ids, tag_ids)):
+        ) in enumerate(train_loader):
             model.zero_grad()
 
             input_ids_batch = input_ids_batch.to(device)
