@@ -178,9 +178,26 @@ class KnowledgeGraph(object):
             abs_idx = -1
             abs_idx_src = []
             new_labels = []
-            for word, label in zip(sent, labels):
+            max_iter = len(sent) - 1
+            starts = ["B-", "I-"]
+            start_idx = 0
+            concatenated_entity = []
+            for i in range(len(sent)):
+                word = sent[i]
+                to_lookup = word
 
-                entities = list(self.lookup_table.get(word, []))
+                label = labels[i]
+                next_label = labels[i + 1] if i != max_iter else "O"
+
+                if label.startswith(starts[start_idx]):
+                    concatenated_entity.append(word)
+                    start_idx = 1
+                if len(concatenated_entity) != 0 and next_label.startswith(("B-", "O")):
+                    to_lookup = " ".join(concatenated_entity)
+                    start_idx = 0
+                    concatenated_entity = []
+
+                entities = list(self.lookup_table.get(to_lookup, []))
                 n_ent_found += len(entities)
                 entities = entities[:max_entities]
                 tokens = self.tokenizer.tokenize(word)
