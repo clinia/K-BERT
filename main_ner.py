@@ -22,7 +22,7 @@ class NERKBERTArgs:
             self.dev_path = "./datasets/medical_ner/dev.tsv"
             self.test_path = "./datasets/medical_ner/test.tsv"
             self.epochs_num = 5
-            self.batch_size = 16
+            self.batch_size = 12
             self.kg_name = "Medical"
             self.output_model_path = "./outputs/kbert_medical_ner_Medical.bin"
             self.labels_path = "datasets/clinia_ner/ser_bus/labels.csv"
@@ -35,7 +35,7 @@ class NERKBERTArgs:
             self.tokenizer = ".model/en/bert_base_uncased/tokenizer.json"
             self.train_path = "./datasets/clinia_ner/ser_bus/validation/data.csv"  ###*** to change to train
             self.dev_path = "./datasets/clinia_ner/ser_bus/validation/data.csv"
-            self.test_path = "./datasets/clinia_ner/ser_bus/test/data.cvs"
+            self.test_path = "./datasets/clinia_ner/ser_bus/test/data.csv"
             self.epochs_num = 5
             self.batch_size = 16
             self.kg_name = "brain/kgs/medical_kg_en.spo"

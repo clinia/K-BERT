@@ -235,7 +235,6 @@ def main(special_args=None):
     # Read dataset.
     def read_dataset(path):
         dataset = []
-        n_entities = 0
         if path.endswith(".tsv"):
 
             with open(path, mode="r", encoding="utf-8") as f:
@@ -250,8 +249,6 @@ def main(special_args=None):
                     pos = pos[0]
                     vm = vm[0].astype("bool")
                     tag = tag[0]
-
-                    n_entities += kg.n_ent_found
 
                     tokens = [vocab.get(t) for t in tokens]
                     labels = [labels_map[l] for l in labels.split(" ")]
@@ -271,11 +268,11 @@ def main(special_args=None):
                     dataset.append([tokens, new_labels, mask, pos, vm, tag])
 
         elif path.endswith(".csv"):
-            dataset = pd.read_csv(path, index_col=0, header=0, engine="python")
-            dataset = dataset.applymap(lambda x: literal_eval(x))
-            for i in range(len(dataset)):
-                text = dataset.loc[i, "text"]
-                labels = dataset.loc[i, "tag"]
+            data = pd.read_csv(path, index_col=0, header=0, engine="python")
+            data = data.applymap(lambda x: literal_eval(x))
+            for i in range(len(data)):
+                text = data.loc[i, "text"]
+                labels = data.loc[i, "tag"]
 
                 tokens, pos, vm, tag, labels = kg.add_knowledge_with_vm_en(
                     [text], [labels], add_pad=True, max_length=args.seq_length
@@ -286,10 +283,8 @@ def main(special_args=None):
                 tag = tag[0]
                 labels = labels[0]
 
-                n_entities += kg.n_ent_found
-
                 tokens = [vocab.get(t) for t in tokens]
-                # labels = [labels_map[l] for l in labels.split(" ")]
+                labels = [labels_map[l] for l in labels]
                 mask = [1] * len(tokens)
 
                 new_labels = []
@@ -305,7 +300,9 @@ def main(special_args=None):
 
                 dataset.append([tokens, new_labels, mask, pos, vm, tag])
 
-        print("Found {} entities".format(n_entities))
+        print("Found {} entities".format(kg.n_ent_found))
+        kg.n_ent_found = 0
+
         return dataset
 
     # Evaluation function.
