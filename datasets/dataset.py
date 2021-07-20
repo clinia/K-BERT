@@ -22,6 +22,7 @@ class NERInjectDataset(Dataset):
         # Parallel processing
         n_cores = max(1, cpu_count() - 1)
 
+        total_ent = 0
         if self.path.endswith(".tsv"):
 
             with open(self.path, mode="r", encoding="utf-8") as f:
@@ -31,13 +32,14 @@ class NERInjectDataset(Dataset):
                     tokens, labels = line.strip().split("\t")
 
                     text = "".join(tokens.split(" "))
-                    tokens, pos, vm, tag = self.kg.add_knowledge_with_vm(
+                    tokens, pos, vm, tag, n_ent_found = self.kg.add_knowledge_with_vm(
                         [text], add_pad=True, max_length=self.max_length
                     )
                     tokens = tokens[0]
                     pos = pos[0]
                     vm = vm[0].astype("bool")
                     tag = tag[0]
+                    total_ent += n_ent_found
 
                     tokens = [self.vocab.get(t) for t in tokens]
                     labels = [self.labels_map[l] for l in labels.split(" ")]
@@ -67,12 +69,14 @@ class NERInjectDataset(Dataset):
 
             data_split = np.array_split(data, n_cores)
             pool = Pool(n_cores)
-            self.dataset = pd.concat(pool.map(self.parallel_data_processing, data_split), ignore_index=True)
+            out = pool.map(self.parallel_data_processing, data_split)
+            data = [out[i][0] for i in range(len(out))]
+            n_ent_found = sum([out[i][1] for i in range(len(out))])
+            self.dataset = pd.concat(data, ignore_index=True)
             pool.close()
             pool.join()
 
-        print("Found {} entities".format(self.kg.n_ent_found))
-        self.kg.n_ent_found = 0
+        print("Found {} entities".format(n_ent_found))
 
     def __getitem__(self, index):
         sentence = self.dataset.loc[index]
@@ -91,11 +95,12 @@ class NERInjectDataset(Dataset):
     def parallel_data_processing(self, data):
         dataset = pd.DataFrame()
         data.reset_index(drop=True, inplace=True)
+        total_ent = 0
         for i in range(len(data)):
             text = data.loc[i, "text"]
             labels = data.loc[i, "tag"]
 
-            tokens, pos, vm, tag, labels = self.kg.add_knowledge_with_vm_en(
+            tokens, pos, vm, tag, labels, n_ent_found = self.kg.add_knowledge_with_vm_en(
                 [text], [labels], add_pad=True, max_length=self.max_length
             )
             tokens = tokens[0]
@@ -103,6 +108,7 @@ class NERInjectDataset(Dataset):
             vm = vm[0].astype("bool")
             tag = tag[0]
             labels = labels[0]
+            total_ent += n_ent_found
 
             tokens = [self.vocab.get(t) for t in tokens]
             labels = [self.labels_map[l] for l in labels]
@@ -123,4 +129,4 @@ class NERInjectDataset(Dataset):
                 {"tokens": tokens, "new_labels": new_labels, "mask": mask, "pos": pos, "vm": vm, "tag": tag},
                 ignore_index=True,
             )
-        return dataset
+        return dataset, total_ent

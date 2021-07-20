@@ -25,8 +25,6 @@ class KnowledgeGraph(object):
             self.tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased", use_fast=True)
         self.special_tags = set(config.NEVER_SPLIT_TAG)
 
-        self.n_ent_found = 0
-
     def _create_lookup_table(self):
         lookup_table = {}
         for spo_path in self.spo_file_paths:
@@ -60,6 +58,7 @@ class KnowledgeGraph(object):
         position_batch = []
         visible_matrix_batch = []
         seg_batch = []
+        n_ent_found = 0
         for split_sent in split_sent_batch:
 
             # create tree
@@ -72,7 +71,7 @@ class KnowledgeGraph(object):
             for token in split_sent:
 
                 entities = list(self.lookup_table.get(token, []))
-                self.n_ent_found += len(entities)
+                n_ent_found += len(entities)
                 entities = entities[:max_entities]
                 sent_tree.append((token, entities))
 
@@ -150,7 +149,7 @@ class KnowledgeGraph(object):
             visible_matrix_batch.append(visible_matrix)
             seg_batch.append(seg)
 
-        return know_sent_batch, position_batch, visible_matrix_batch, seg_batch
+        return know_sent_batch, position_batch, visible_matrix_batch, seg_batch, n_ent_found
 
     def add_knowledge_with_vm_en(
         self, sent_batch, labels_batch, max_entities=config.MAX_ENTITIES, add_pad=True, max_length=128
@@ -168,6 +167,7 @@ class KnowledgeGraph(object):
         visible_matrix_batch = []
         seg_batch = []
         new_labels_batch = []
+        n_ent_found = 0
         for sent, labels in zip(sent_batch, labels_batch):
 
             # create tree
@@ -181,7 +181,7 @@ class KnowledgeGraph(object):
             for word, label in zip(sent, labels):
 
                 entities = list(self.lookup_table.get(word, []))
-                self.n_ent_found += len(entities)
+                n_ent_found += len(entities)
                 entities = entities[:max_entities]
                 tokens = self.tokenizer.tokenize(word)
                 # Handle case where word cannot be tokenized (\xad, etc)
@@ -265,4 +265,4 @@ class KnowledgeGraph(object):
             seg_batch.append(seg)
             new_labels_batch.append(new_labels)
 
-        return know_sent_batch, position_batch, visible_matrix_batch, seg_batch, new_labels_batch
+        return know_sent_batch, position_batch, visible_matrix_batch, seg_batch, new_labels_batch, n_ent_found
