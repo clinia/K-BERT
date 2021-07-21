@@ -37,10 +37,11 @@ class NERKBERTArgs:
             self.dev_path = "./datasets/clinia_ner/ser_bus/validation/data.csv"
             self.test_path = "./datasets/clinia_ner/ser_bus/test/data.csv"
             self.epochs_num = 5
-            self.batch_size = 16
+            self.batch_size = 128
             self.kg_name = "brain/kgs/medical_kg_en.spo"
             self.output_model_path = "./outputs/kbert_medical_ner_Medical_en.bin"
             self.labels_path = "datasets/clinia_ner/ser_bus/labels.csv"
+            self.seq_length = 50
 
 
 if __name__ == "__main__":

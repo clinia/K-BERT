@@ -142,6 +142,7 @@ def main(special_args=None):
         args.kg_name = special_args.kg_name
         args.output_model_path = special_args.output_model_path
         args.labels_path = special_args.labels_path
+        args.seq_length = special_args.seq_length
 
     # Load the hyperparameters of the config file.
     args = load_hyperparam(args)
@@ -230,90 +231,92 @@ def main(special_args=None):
         confusion = torch.zeros(len(labels_map), len(labels_map), dtype=torch.long)
 
         model.eval()
+        with torch.no_grad():
+            for i, (
+                input_ids_batch,
+                label_ids_batch,
+                mask_ids_batch,
+                pos_ids_batch,
+                vm_ids_batch,
+                tag_ids_batch,
+            ) in enumerate(data_loader):
 
-        for i, (
-            input_ids_batch,
-            label_ids_batch,
-            mask_ids_batch,
-            pos_ids_batch,
-            vm_ids_batch,
-            tag_ids_batch,
-        ) in enumerate(data_loader):
+                input_ids_batch = input_ids_batch.to(device)
+                label_ids_batch = label_ids_batch.to(device)
+                mask_ids_batch = mask_ids_batch.to(device)
+                pos_ids_batch = pos_ids_batch.to(device)
+                tag_ids_batch = tag_ids_batch.to(device)
+                vm_ids_batch = vm_ids_batch.long().to(device)
 
-            input_ids_batch = input_ids_batch.to(device)
-            label_ids_batch = label_ids_batch.to(device)
-            mask_ids_batch = mask_ids_batch.to(device)
-            pos_ids_batch = pos_ids_batch.to(device)
-            tag_ids_batch = tag_ids_batch.to(device)
-            vm_ids_batch = vm_ids_batch.long().to(device)
+                loss, _, pred, gold = model(
+                    input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vm_ids_batch
+                )
 
-            loss, _, pred, gold = model(input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vm_ids_batch)
+                for j in range(gold.size()[0]):
+                    if gold[j].item() in begin_ids:
+                        gold_entities_num += 1
 
-            for j in range(gold.size()[0]):
-                if gold[j].item() in begin_ids:
-                    gold_entities_num += 1
+                for j in range(pred.size()[0]):
+                    if pred[j].item() in begin_ids and gold[j].item() != labels_map["[PAD]"]:
+                        pred_entities_num += 1
 
-            for j in range(pred.size()[0]):
-                if pred[j].item() in begin_ids and gold[j].item() != labels_map["[PAD]"]:
-                    pred_entities_num += 1
+                pred_entities_pos = []
+                gold_entities_pos = []
+                start, end = 0, 0
 
-            pred_entities_pos = []
-            gold_entities_pos = []
-            start, end = 0, 0
+                for j in range(gold.size()[0]):
+                    if gold[j].item() in begin_ids:
+                        start = j
+                        for k in range(j + 1, gold.size()[0]):
 
-            for j in range(gold.size()[0]):
-                if gold[j].item() in begin_ids:
-                    start = j
-                    for k in range(j + 1, gold.size()[0]):
+                            if gold[k].item() == labels_map["[ENT]"]:
+                                continue
 
-                        if gold[k].item() == labels_map["[ENT]"]:
-                            continue
+                            if (
+                                gold[k].item() == labels_map["[PAD]"]
+                                or gold[k].item() == labels_map["O"]
+                                or gold[k].item() in begin_ids
+                            ):
+                                end = k - 1
+                                break
+                        else:
+                            end = gold.size()[0] - 1
+                        gold_entities_pos.append((start, end))
 
-                        if (
-                            gold[k].item() == labels_map["[PAD]"]
-                            or gold[k].item() == labels_map["O"]
-                            or gold[k].item() in begin_ids
-                        ):
-                            end = k - 1
-                            break
+                for j in range(pred.size()[0]):
+                    if (
+                        pred[j].item() in begin_ids
+                        and gold[j].item() != labels_map["[PAD]"]
+                        and gold[j].item() != labels_map["[ENT]"]
+                    ):
+                        start = j
+                        for k in range(j + 1, pred.size()[0]):
+
+                            if gold[k].item() == labels_map["[ENT]"]:
+                                continue
+
+                            if (
+                                pred[k].item() == labels_map["[PAD]"]
+                                or pred[k].item() == labels_map["O"]
+                                or pred[k].item() in begin_ids
+                            ):
+                                end = k - 1
+                                break
+                        else:
+                            end = pred.size()[0] - 1
+                        pred_entities_pos.append((start, end))
+
+                for entity in pred_entities_pos:
+                    if entity not in gold_entities_pos:
+                        continue
                     else:
-                        end = gold.size()[0] - 1
-                    gold_entities_pos.append((start, end))
+                        correct += 1
 
-            for j in range(pred.size()[0]):
-                if (
-                    pred[j].item() in begin_ids
-                    and gold[j].item() != labels_map["[PAD]"]
-                    and gold[j].item() != labels_map["[ENT]"]
-                ):
-                    start = j
-                    for k in range(j + 1, pred.size()[0]):
-
-                        if gold[k].item() == labels_map["[ENT]"]:
-                            continue
-
-                        if (
-                            pred[k].item() == labels_map["[PAD]"]
-                            or pred[k].item() == labels_map["O"]
-                            or pred[k].item() in begin_ids
-                        ):
-                            end = k - 1
-                            break
-                    else:
-                        end = pred.size()[0] - 1
-                    pred_entities_pos.append((start, end))
-
-            for entity in pred_entities_pos:
-                if entity not in gold_entities_pos:
-                    continue
-                else:
-                    correct += 1
-
-        print("Report precision, recall, and f1:")
-        p = correct / pred_entities_num
-        r = correct / gold_entities_num
-        f1 = 2 * p * r / (p + r)
-        print("{:.3f}, {:.3f}, {:.3f}".format(p, r, f1))
+            print("Report precision, recall, and f1:")
+            p = correct / pred_entities_num
+            r = correct / gold_entities_num
+            f1 = 2 * p * r / (p + r)
+            print("{:.3f}, {:.3f}, {:.3f}".format(p, r, f1))
 
         return f1
 
