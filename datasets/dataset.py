@@ -114,7 +114,6 @@ class NERInjectDataset(Dataset):
             labels = labels[0]
             total_ent += n_ent_found
 
-            sent = tokens
             tokens = [self.vocab.get(t) for t in tokens]
             labels = [self.labels_map[l] for l in labels]
             mask = [1] * len(tokens)
@@ -132,7 +131,6 @@ class NERInjectDataset(Dataset):
 
             dataset = dataset.append(
                 {
-                    "sent": sent,
                     "tokens": tokens,
                     "new_labels": new_labels,
                     "mask": mask,
