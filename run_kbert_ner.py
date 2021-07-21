@@ -319,23 +319,15 @@ def main(special_args=None):
 
     # Training phase.
     print("Building datasets.")
-    # instances = read_dataset(args.train_path)
-
-    # input_ids = torch.LongTensor([ins[0] for ins in instances])
-    # label_ids = torch.LongTensor([ins[1] for ins in instances])
-    # mask_ids = torch.LongTensor([ins[2] for ins in instances])
-    # pos_ids = torch.LongTensor([ins[3] for ins in instances])
-    # vm_ids = torch.BoolTensor([ins[4] for ins in instances])
-    # tag_ids = torch.LongTensor([ins[5] for ins in instances])
 
     # Set up datasets
     train_dataset = NERInjectDataset(
         args.train_path, kg=kg, vocab=vocab, labels_map=labels_map, max_length=args.seq_length
     )
     dev_dataset = NERInjectDataset(args.dev_path, kg=kg, vocab=vocab, labels_map=labels_map, max_length=args.seq_length)
-    # test_dataset = NERInjectDataset(
-    #     args.test_path, kg=kg, vocab=vocab, labels_map=labels_map, max_length=args.seq_length
-    # )
+    test_dataset = NERInjectDataset(
+        args.test_path, kg=kg, vocab=vocab, labels_map=labels_map, max_length=args.seq_length
+    )
 
     instances_num = len(train_dataset)
     batch_size = args.batch_size
@@ -343,8 +335,8 @@ def main(special_args=None):
 
     # Create dataloaders
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    # dev_loader = DataLoader(dev_dataset, batch_size=batch_size, shuffle=True)
-    # test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
+    dev_loader = DataLoader(dev_dataset, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
 
     print("Start training.")
     print("Batch size: ", batch_size)
@@ -398,9 +390,9 @@ def main(special_args=None):
 
         # Evaluation phase.
         print("Start evaluate on dev dataset.")
-        f1 = evaluate(args, False)
-        print("Start evaluation on test dataset.")
-        evaluate(args, True)
+        f1 = evaluate(dev_loader, args)
+        # print("Start evaluation on test dataset.")
+        # evaluate(args)
 
         if f1 > best_f1:
             best_f1 = f1
@@ -416,7 +408,7 @@ def main(special_args=None):
     else:
         model.load_state_dict(torch.load(args.output_model_path))
 
-    evaluate(args, True)
+    evaluate(test_loader, args)
 
 
 if __name__ == "__main__":
