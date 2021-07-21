@@ -62,7 +62,11 @@ class NERInjectDataset(Dataset):
                     )
 
         elif self.path.endswith(".csv"):
-            data = pd.read_csv(path, index_col=0, header=0, engine="python")
+            if self.path.endswith("train/data.csv"):
+                head = 70000
+            else:
+                head = 15000
+            data = pd.read_csv(path, index_col=0, header=0, engine="python").head(head)
             data = data.applymap(lambda x: literal_eval(x))
 
             print("Processing dataset using {} cores.".format(n_cores))
@@ -71,12 +75,12 @@ class NERInjectDataset(Dataset):
             pool = Pool(n_cores)
             out = pool.map(self.parallel_data_processing, data_split)
             data = [out[i][0] for i in range(len(out))]
-            n_ent_found = sum([out[i][1] for i in range(len(out))])
+            total_ent = sum([out[i][1] for i in range(len(out))])
             self.dataset = pd.concat(data, ignore_index=True)
             pool.close()
             pool.join()
 
-        print("Found {} entities".format(n_ent_found))
+        print("Found {} entities".format(total_ent))
 
     def __getitem__(self, index):
         sentence = self.dataset.loc[index]
