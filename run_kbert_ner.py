@@ -214,119 +214,14 @@ def main(special_args=None):
 
     model = model.to(device)
 
-    # Datset loader.
-    def batch_loader(batch_size, input_ids, label_ids, mask_ids, pos_ids, vm_ids, tag_ids):
-        instances_num = input_ids.size()[0]
-        for i in range(instances_num // batch_size):
-            input_ids_batch = input_ids[i * batch_size : (i + 1) * batch_size, :]
-            label_ids_batch = label_ids[i * batch_size : (i + 1) * batch_size, :]
-            mask_ids_batch = mask_ids[i * batch_size : (i + 1) * batch_size, :]
-            pos_ids_batch = pos_ids[i * batch_size : (i + 1) * batch_size, :]
-            vm_ids_batch = vm_ids[i * batch_size : (i + 1) * batch_size, :, :]
-            tag_ids_batch = tag_ids[i * batch_size : (i + 1) * batch_size, :]
-            yield input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vm_ids_batch, tag_ids_batch
-        if instances_num > instances_num // batch_size * batch_size:
-            input_ids_batch = input_ids[instances_num // batch_size * batch_size :, :]
-            label_ids_batch = label_ids[instances_num // batch_size * batch_size :, :]
-            mask_ids_batch = mask_ids[instances_num // batch_size * batch_size :, :]
-            pos_ids_batch = pos_ids[instances_num // batch_size * batch_size :, :]
-            vm_ids_batch = vm_ids[instances_num // batch_size * batch_size :, :, :]
-            tag_ids_batch = tag_ids[instances_num // batch_size * batch_size :, :]
-            yield input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vm_ids_batch, tag_ids_batch
-
-    # Read dataset.
-    def read_dataset(path):
-        dataset = []
-        if path.endswith(".tsv"):
-
-            with open(path, mode="r", encoding="utf-8") as f:
-                f.readline()
-                tokens, labels = [], []
-                for line_id, line in enumerate(f):
-                    tokens, labels = line.strip().split("\t")
-
-                    text = "".join(tokens.split(" "))
-                    tokens, pos, vm, tag = kg.add_knowledge_with_vm([text], add_pad=True, max_length=args.seq_length)
-                    tokens = tokens[0]
-                    pos = pos[0]
-                    vm = vm[0].astype("bool")
-                    tag = tag[0]
-
-                    tokens = [vocab.get(t) for t in tokens]
-                    labels = [labels_map[l] for l in labels.split(" ")]
-                    mask = [1] * len(tokens)
-
-                    new_labels = []
-                    j = 0
-                    for i in range(len(tokens)):
-                        if tag[i] == 0 and tokens[i] != PAD_ID:
-                            new_labels.append(labels[j])
-                            j += 1
-                        elif tag[i] == 1 and tokens[i] != PAD_ID:  # 是添加的实体
-                            new_labels.append(labels_map["[ENT]"])
-                        else:
-                            new_labels.append(labels_map[PAD_TOKEN])
-
-                    dataset.append([tokens, new_labels, mask, pos, vm, tag])
-
-        elif path.endswith(".csv"):
-            data = pd.read_csv(path, index_col=0, header=0, engine="python")
-            data = data.applymap(lambda x: literal_eval(x))
-            for i in range(len(data)):
-                text = data.loc[i, "text"]
-                labels = data.loc[i, "tag"]
-
-                tokens, pos, vm, tag, labels = kg.add_knowledge_with_vm_en(
-                    [text], [labels], add_pad=True, max_length=args.seq_length
-                )
-                tokens = tokens[0]
-                pos = pos[0]
-                vm = vm[0].astype("bool")
-                tag = tag[0]
-                labels = labels[0]
-
-                tokens = [vocab.get(t) for t in tokens]
-                labels = [labels_map[l] for l in labels]
-                mask = [1] * len(tokens)
-
-                new_labels = []
-                j = 0
-                for i in range(len(tokens)):
-                    if tag[i] == 0 and tokens[i] != PAD_ID:
-                        new_labels.append(labels[j])
-                        j += 1
-                    elif tag[i] == 1 and tokens[i] != PAD_ID:  # 是添加的实体
-                        new_labels.append(labels_map["[ENT]"])
-                    else:
-                        new_labels.append(labels_map[PAD_TOKEN])
-
-                dataset.append([tokens, new_labels, mask, pos, vm, tag])
-
-        print("Found {} entities".format(kg.n_ent_found))
-        kg.n_ent_found = 0
-
-        return dataset
-
     # Evaluation function.
-    def evaluate(data_loader, args, is_test):
-        # if is_test:
-        #     dataset = read_dataset(args.test_path)
-        # else:
-        #     dataset = read_dataset(args.dev_path)
-
-        # input_ids = torch.LongTensor([sample[0] for sample in dataset])
-        # label_ids = torch.LongTensor([sample[1] for sample in dataset])
-        # mask_ids = torch.LongTensor([sample[2] for sample in dataset])
-        # pos_ids = torch.LongTensor([sample[3] for sample in dataset])
-        # vm_ids = torch.BoolTensor([sample[4] for sample in dataset])
-        # tag_ids = torch.LongTensor([sample[5] for sample in dataset])
+    def evaluate(data_loader, args):
 
         instances_num = len(data_loader) * args.batch_size
         batch_size = args.batch_size
 
-        if is_test:
-            print("Batch size: ", batch_size)
-            print("The number of test instances:", instances_num)
+        print("Batch size: ", batch_size)
+        print("The number of test instances:", instances_num)
 
         correct = 0
         gold_entities_num = 0
