@@ -60,7 +60,7 @@ osteoporosis	categories	diseases
 expansion of physiological blind spots	categories	symptoms
 bone wear and osteophyte hyperplasia	types	symptoms
 sprained fingers	categories	symptoms
-knee and calf have broad	type	and symptoms
+knee and calf have broad	type	symptoms
 yellow leucorrhea	categories	symptoms
 strawberry hemangioma	category	disease
 cerebral arachnoiditis	categories	diseases
@@ -776,7 +776,7 @@ pharyngoesophageal diverticulum	category	disease
 renal artery embolism	category	disease
 primary skin b-cell lymphoma	category	disease
 xianzhuli oral liquid	category	treatment
-mental disorders	categories	and diseases associated with hyperthyroidism
+mental disorders	categories	diseases associated with hyperthyroidism
 coarctation of the abdominal aorta	category	disease
 pathological nerve damage	category	disease
 significant redness and swelling around the umbilical cord	type	symptoms
@@ -873,7 +873,7 @@ pathological rem sleep	categories	symptoms
 skin atrophy and pigmentation	categories	symptoms
 traumatic diaphragmatic hernia	category	disease
 external anal sphincter	category	location
-mental disorders	types	and diseases associated with abnormal thyroid function
+mental disorders	types	diseases associated with abnormal thyroid function
 hypocalcemia	categories	symptoms
 infant vulvitis	categories	diseases
 food allergic asthma	categories	diseases
@@ -1029,7 +1029,7 @@ masseter hypertrophy	categories	symptoms
 neonatal acquired immunodeficiency syndrome	category	disease
 mycosis of the external auditory canal	category	disease
 sliding inguinal hernia	category	disease
-other salmonella infections	Types	and diseases in children
+other salmonella infections	Types	diseases in children
 thyroid adenoma	category	disease
 air cystitis	category	disease
 swelling of hands and feet	categories	symptoms
@@ -1066,7 +1066,6 @@ serum antisperm antibody positive infertility	category	disease
 pulmonary miyazaki paragonimiasis	category	disease
 alzheimer's	categories	diseases
 lipodystrophy	category	disease
-common	types	symptoms in castor bean stools
 vaginal adenocarcinoma	category	disease
 aztreonam injection	category	treatment
 hemolytic anemia caused by arsine	category	disease
@@ -1209,7 +1208,7 @@ choroidal detachment type retinal detachment	category	disease
 neurosyphilis in the elderly	categories	diseases
 simvastatin capsules	category	treatment
 top of the left head	category	location
-mental disorders	types	and diseases associated with traumatic brain injury
+mental disorders	types	diseases associated with traumatic brain injury
 pediatric obesity reproductive impotence syndrome	category	disease
 rhinosclerosis	category	disease
 earlobe defects	categories	symptoms
@@ -1247,7 +1246,7 @@ cystinopathy in children	categories	diseases
 tricyclic antidepressant poisoning	category	disease
 formaldehyde poisoning	category	disease
 salivary gland cyst	category	disease
-there are blisters on the foreskin	categories	symptoms
+blisters on the foreskin	categories	symptoms
 urethral itching	categories	symptoms
 swelling on the inner side of the knee joint	type	symptoms
 skin adhesions	categories	symptoms
@@ -1406,7 +1405,6 @@ spontaneous esophageal rupture	category	disease
 nasal columella defect	category	symptom
 rhabdomyosarcoma	category	disease
 thick and greasy tongue coating	categories	symptoms
-there are	types	and symptoms in and around the blood vessel wall
 anal canal injury	category	disease
 pathological reflex	category	inspection
 lacrimal gland inflammation	categories	symptoms
@@ -1782,7 +1780,7 @@ paralytic strabismus	category	disease
 muscle pain	categories	symptoms
 pain in the upper back and upper part of the heel	type	symptom
 adrenal disorders	categories	diseases
-there are small red spots on the foreskin	categories	symptoms
+small red spots on the foreskin	categories	symptoms
 body hair loss	categories	symptoms
 other viral pneumonia	categories	diseases
 neutral cell number	type	inspection
@@ -2437,7 +2435,7 @@ eyelids are purple-red	category	symptoms
 blue tympanic membrane sign	category	symptom
 intestinal cystic gas	categories	symptoms
 neonatal shortness of breath	categories	symptoms
-mental disorders	types	and diseases associated with scleroderma
+mental disorders	types	diseases associated with scleroderma
 malignant fibrous histiocytoma of bone	category	disease
 adolescent uterine bleeding	categories	symptoms
 paraanal abscess	category	symptoms
@@ -2545,11 +2543,11 @@ femoral shaft fractures	categories	diseases
 itching in the throat and mouth	types	symptoms
 insufficient pancreatic function	categories	symptoms
 partial body atrophy	category	symptom
-nervous system manifestations	categories	and diseases of acquired immunodeficiency syndrome
+nervous system manifestations	categories	diseases of acquired immunodeficiency syndrome
 aeromonas hydrophila infection	category	disease
 congenital short colon	category	disease
 neonatal subcutaneous gangrene	category	disease
-the occurrence	type	and symptoms of subcutaneous deposits
+the occurrence	type	symptoms of subcutaneous deposits
 syphilis in pregnancy	category	disease
 autoimmune liver disease	category	disease
 pediatric bladder-ureteral reflux syndrome	category	disease
@@ -3506,7 +3504,7 @@ chapped hands and feet	categories	diseases
 dizziness after strenuous exercise	categories	symptoms
 hypothermia	category	disease
 cingulate seizures	categories	symptoms of frontal lobe epilepsy
-ocular lesions	categories	and diseases of nasopharyngeal carcinoma
+ocular lesions	categories	diseases of nasopharyngeal carcinoma
 hematoma formation	types	symptoms
 tenderness in the lower abdomen	categories	symptoms
 persistent pain in the upper abdomen	category	symptom
@@ -3556,7 +3554,7 @@ aortic valve	category	inspection
 acute appendicitis of pregnancy	category	disease
 emotional ups and downs	categories	symptoms
 subcutaneous crepitus	category	inspection
-symptoms	categories	and symptoms of heterophilia in children
+symptoms	categories	symptoms of heterophilia in children
 nose erosion	categories	symptoms
 unexplained pain in the thumb	type	symptom
 tactile tremor	category	inspection
@@ -3610,7 +3608,7 @@ ankle cartilage injuries	categories	diseases
 lower lip skin	category	location
 rupture of membranes	categories	symptoms
 megaloblastic anemia in the elderly	categories	diseases
-disorders	types	and diseases of the mitral valve and aortic valve
+disorders	types	diseases of the mitral valve and aortic valve
 acute tracheobronchitis in children	categories	diseases
 asthma in pregnant women	categories	symptoms
 newborn breastfeeding	categories	symptoms
@@ -3841,7 +3839,7 @@ placenta	category	location
 bacterial vaginosis	category	disease
 neurogenic bladder	category	disease
 postprandial episodic abdominal pain	category	symptom
-mental disorders	types	and diseases associated with anemia
+mental disorders	types	diseases associated with anemia
 congenital aniridia	categories	symptoms
 aortic aneurysm	category	disease
 lymphatic tuberculosis	category	disease
@@ -3941,7 +3939,7 @@ metastatic small bowel tumor	category	disease
 post-contraceptive amenorrhea syndrome	category	disease
 ischemic optic neuropathy	category	disease
 weakness in holding objects	categories	symptoms
-mental disorders	types	and diseases associated with abnormal parathyroid function
+mental disorders	types	diseases associated with abnormal parathyroid function
 lung cancer bone metastases	categories	diseases
 physical allergies	categories	diseases
 pediatric hemifacial hypertrophy syndrome	category	disease
@@ -4002,7 +4000,7 @@ carbon monoxide poisoning in children	categories	diseases
 phlegm and dampness obstruct the lung	category	disease
 gastrointestinal bleeding	categories	symptoms
 gray complexion	type	symptoms
-mental disorders	types	and diseases associated with hepatolenticular degeneration
+mental disorders	types	diseases associated with hepatolenticular degeneration
 there is often numbness	type	symptom on the distal side of the limb
 chronic waist strain	category	disease
 left adrenal gland	category	location
@@ -4064,7 +4062,7 @@ paraurethral adenocarcinoma	category	disease
 slow blood flow in various organs of the body	types	symptoms
 incomplete uterine involution	type	disease
 hydronephrosis phenomenon	category	symptom
-mental disorders	categories	and diseases caused by traumatic brain injury
+mental disorders	categories	diseases caused by traumatic brain injury
 delayed myelination	categories	symptoms
 erythema nodosa	category	disease
 antisperm antibody positive	category	symptom
@@ -4168,7 +4166,7 @@ hypospadias	categories	symptoms
 omentum cyst	category	disease
 upper gastrointestinal bleeding	categories	symptoms
 eosinophilic granuloma of bone	category	disease
-there are tiny nodules on the axillary hair shafts	categories	symptoms
+tiny nodules on the axillary hair shafts	categories	symptoms
 secondary adrenal insufficiency	category	disease
 hyperthyroidism during pregnancy	category	disease
 articulation	categories	symptoms
@@ -4435,7 +4433,7 @@ ear canal scratches	categories	symptoms
 elderly sleep disorders	categories	diseases
 breast duct dilatation	category	disease
 pulmonary artery stenosis	categories	symptoms
-the formation	types	and symptoms of portal collateral circulation
+the formation	types	symptoms of portal collateral circulation
 cough with clubbing	category	symptoms
 rupture of the esophagus	category	disease
 pediatric gastrointestinal pain	categories	diseases
@@ -4491,7 +4489,7 @@ red silk qi veins	category	disease
 malignant melanocyte tumors of the eyelids	categories	diseases
 changes	types	symptoms of blood vessel pulsation or waveform
 osteogenesis imperfecta	category	disease
-mental disorders	types	and diseases associated with japanese encephalitis
+mental disorders	types	diseases associated with japanese encephalitis
 toe flexion contracture	category	symptoms
 muscle tenderness	categories	symptoms
 recurrent necrotizing perimucositis	category	disease
@@ -4538,7 +4536,7 @@ spleen deficiency and diarrhea	categories	diseases
 lipocytosis	category	disease
 lacrimal tumors	categories	diseases
 ambroxol oral solution	category	treatment
-skin	type	and symptoms similar to urticaria
+skin	type	symptoms similar to urticaria
 aeromonas hydrophila enteritis	category	disease
 osteoporosis	categories	symptoms
 renal vein thrombosis in children	categories	diseases
@@ -4687,7 +4685,7 @@ dissociative identity disorder	categories	symptoms
 mental disorders	categories	diseases
 posterior cervical dislocation	category	disease
 citrobacter pneumonia	category	disease
-mental disorders	types	and diseases associated with behcet's disease
+mental disorders	types	diseases associated with behcet's disease
 neonatal hyponatremia	category	disease
 the big toe and the second toe are spaced far apart	categories	symptoms
 spleen and kidney yang deficiency	Types	symptoms
@@ -4804,7 +4802,7 @@ qi dysfunction	category	symptom
 left hand oblique position	category	inspection
 right shoulder joint anterior view	category	inspection
 brainstem tumors	categories	diseases
-movement	categories	and symptoms of frontal lobe epilepsy
+movement	categories	symptoms of frontal lobe epilepsy
 pediatric non-lactide reticuloendothelial syndrome	category	disease
 alcoholic tremor	categories	symptoms
 mesenteric vein thrombosis	category	disease
@@ -4985,7 +4983,7 @@ hypertension during pregnancy	categories	symptoms
 later amnesia	categories	symptoms
 brain protein hydrolysate	category	treatment
 anemia of chronic disease	category	disease
-cerebral thrombosis in the elderly	Types	and diseases
+cerebral thrombosis in the elderly	Types	diseases
 urethral orifice adhesions	categories	symptoms
 pediatric marfan syndrome	categories	diseases
 hand and foot cyanosis	category	disease
@@ -5023,7 +5021,7 @@ pneumococcal pneumonia	category	disease
 vesicovaginal fistula	categories	symptoms
 idiopathic edema	categories	symptoms
 abdominal hemorrhage	categories	symptoms
-mental disorders	Types	and diseases caused by qigong
+mental disorders	Types	diseases caused by qigong
 thalamic hemorrhage	categories	symptoms
 secondary purulent peritonitis	category	disease
 breast lumps	categories	symptoms
@@ -5299,7 +5297,7 @@ depersonalization-derealization syndrome	category	disease
 axial vertebral body fracture	category	disease
 rheumatic anemia	category	disease
 paving stone degeneration	category	symptom
-the cystic mass in the upper left abdomen has tenderness	type	and symptoms
+the cystic mass in the upper left abdomen has tenderness	type	symptoms
 pediatric developmental angular gyrus syndrome	categories	diseases
 itchy wound healing	categories	symptoms
 ventricular septal defect	category	disease
@@ -5558,7 +5556,7 @@ rhinoceros	category	disease
 right subtotal thyroidectomy	category	treatment
 red or black spots on nails	category	symptoms
 eyeball convergent function anesthesia	category	symptom
-there are more uroporphyrins in the urine	categories	symptoms
+more uroporphyrins in the urine	categories	symptoms
 semi-flexed upper limbs	categories	symptoms
 fetal distress	categories	diseases
 connective tissue enteritis	category	disease
@@ -5628,7 +5626,7 @@ cardiogenic dyspnea	categories	symptoms
 pericardial mesothelioma	category	disease
 metabolic acidosis	categories	symptoms
 renal vascular hypertension	category	disease
-fecal matter	type	and symptoms in the vagina
+fecal matter	type	symptoms in the vagina
 epidemic hemorrhagic fever	category	disease
 lymph outflow	category	symptom
 enlargement of the auricle	category	symptom
@@ -5821,7 +5819,7 @@ male genital trauma	categories	diseases
 laryngeal spasm	categories	symptoms
 retroperitoneal space bleeding	category	disease
 duck step gait	category	symptom
-multiple soft tissue injuries	types	and diseases in the body
+multiple soft tissue injuries	types	diseases in the body
 carpal tunnel syndrome	category	disease
 infant fibrous hamartoma	category	disease
 ct of lumbar intervertebral disc	category	examination
@@ -6004,7 +6002,7 @@ prepubertal periodontitis	categories	diseases
 wegener's granulomatosis in children	categories	diseases
 premature loss of chewing function	categories	symptoms
 white matter atrophy	categories	symptoms
-mental disorders	types	and diseases associated with sporadic encephalitis
+mental disorders	types	diseases associated with sporadic encephalitis
 lower abdominal pain	categories	symptoms
 pulmonary nodules	categories	symptoms
 sciatic nerve pelvic outlet stenosis	category	disease
@@ -6104,7 +6102,7 @@ testicular teratoma	category	disease
 painful white swelling	category	symptom
 myocardial stunning	categories	symptoms
 eyeball penetrating injury	category	disease
-forehead	category	and symptoms of frontal lobe epilepsy
+forehead	category	symptoms of frontal lobe epilepsy
 allergic skin diseases	categories	diseases
 pediatric homocystinuria	categories	diseases
 thoracic mri	category	examination
@@ -6412,7 +6410,7 @@ stool-like material discharged from abdominal wound	type	symptom
 acute mumps orchitis	category	disease
 venereal lymphogranuloma	category	disease
 chronic hypertrophic rhinitis	category	disease
-mental disorders	types	and diseases associated with systemic lupus erythematosus
+mental disorders	types	diseases associated with systemic lupus erythematosus
 cushing syndrome	categories	symptoms
 teeth neck macula	categories	symptoms
 gradually in one side of the scrotum	type	symptom
@@ -6801,7 +6799,7 @@ lower respiratory tract infections	categories	diseases
 postoperative acute mental disorders	categories	symptoms
 non-specific vaginitis	category	disease
 esotropia v sign	category	symptom
-there are more purulent discharges around the umbilical cord	categories	symptoms
+more purulent discharges around the umbilical cord	categories	symptoms
 myocardial ischemia	category	disease
 alcoholic cardiomyopathy	category	disease
 diaper dermatitis	category	disease
@@ -7059,7 +7057,7 @@ metallic sweetness in the mouth	category	symptoms
 hyperthyroidism	categories	symptoms
 rodenticide poisoning	category	disease
 fontanelle closed late	category	symptoms
-multiple space infections	types	and diseases in the floor of the mouth
+multiple space infections	types	diseases in the floor of the mouth
 generalized and non-localized abdominal pain	categories	symptoms
 abdominal pain	types	symptoms of pregnant women not due to pregnancy
 muscle tension pain	categories	symptoms
@@ -7067,11 +7065,11 @@ joint pain	category	disease
 streptomycin drugs	category	treatment
 mental dependence	categories	symptoms
 glans flushing	categories	symptoms
-mental disorders	categories	and diseases associated with cardiovascular disease
+mental disorders	categories	diseases associated with cardiovascular disease
 liver reticularis	Types	symptoms
 back pain	categories	symptoms
 systemic allergy and fever	categories	symptoms
-mental disorders	types	and diseases associated with chromosomal abnormalities
+mental disorders	types	diseases associated with chromosomal abnormalities
 orbital fracture	category	disease
 triglycerides	category	check
 familial abnormal beta lipoproteinemia	category	disease
@@ -7177,7 +7175,7 @@ mesenteric hiatal hernia	category	disease
 genital trauma	categories	symptoms
 hepatic hydatid disease	category	disease
 network dependence	categories	symptoms
-mental disorders	types	and diseases associated with epilepsy
+mental disorders	types	diseases associated with epilepsy
 sebaceous cyst disease	category	disease
 carotid artery color doppler ultrasound	category	examination
 left wrist joint	category	location
@@ -7199,7 +7197,7 @@ abnormal dystocia	category	disease
 respiratory distress syndrome	categories	symptoms
 thrombus external hemorrhoids	categories	symptoms
 intracranial hemorrhage in children	categories	diseases
-infections	types	and diseases of various systems caused by enteroviruses
+infections	types	diseases of various systems caused by enteroviruses
 cervical congestion	categories	symptoms
 cognitive dysfunction	categories	symptoms
 persistent low back pain with morning stiffness	categories	symptoms
@@ -7391,7 +7389,7 @@ venereal neurosis	category	disease
 polycystic ovary	categories	symptoms
 viral meningitis	category	disease
 sacrococcygeal teratoma in children	category	disease
-congenital toxoplasma infection in newborns	Types	and diseases
+congenital toxoplasma infection in newborns	Types	diseases
 fetal bradycardia	categories	symptoms
 skin metastases	categories	symptoms
 concealed penis	category	disease
@@ -7581,7 +7579,7 @@ aging sagging eye bags	categories	symptoms
 decreased lung volume	category	symptom
 skin lymphoma	category	disease
 aspiration of large amounts of amniotic fluid	category	disease
-mental disorders	types	and diseases associated with hypertension
+mental disorders	types	diseases associated with hypertension
 sleep epilepsy	category	disease
 malignant eccrine spiral adenoma	category	disease
 sports neglect	categories	symptoms
@@ -7732,7 +7730,7 @@ mitochondrial disease	category	disease
 ganglioside deposition disease	category	disease
 acute cholecystitis and cholangitis in children	categories	diseases
 acro ischemia	category	symptom
-mental disorders	types	and diseases associated with physical infections
+mental disorders	types	diseases associated with physical infections
 blepharospasm	categories	symptoms
 cardiac aortic regurgitation	categories	symptoms
 hand and finger fullness	category	symptom
@@ -7915,7 +7913,7 @@ limb joints	categories	parts
 anal ectopic	category	disease
 fibrosarcoma	category	disease
 pediatric nodular goiter	category	disease
-mental disorders	categories	and diseases associated with abnormal glucose metabolism
+mental disorders	categories	diseases associated with abnormal glucose metabolism
 maple diabetes	category	disease
 vaginal discharge looks like black water	type	symptom
 epidemic keratoconjunctivitis	category	disease
@@ -8415,7 +8413,7 @@ pediatric neuroblastoma	category	disease
 alternate binge eating anorexia	categories	symptoms
 eruptive vellus hair cyst	category	disease
 necrotizing enterocolitis of the newborn	category	disease
-mental disorders	categories	and diseases associated with nutritional and metabolic diseases
+mental disorders	categories	diseases associated with nutritional and metabolic diseases
 spontaneous intraventricular hemorrhage	category	disease
 cubital tunnel syndrome	categories	symptoms
 unilateral nasal obstruction	categories	symptoms
@@ -8428,7 +8426,7 @@ congenital hip abduction contracture and pelvic tilt	category	disease
 hemolytic anemia in children	categories	diseases
 nifedipine sustained-release tablets	category	treatment
 pediatric saddle germ cell tumor	category	disease
-there are gray membranes on the tonsils	categories	symptoms
+gray membranes on the tonsils	categories	symptoms
 low sperm motility	categories	symptoms
 nystagmus	categories	symptoms
 insulin injection	category	treatment
@@ -8458,7 +8456,7 @@ antihypertensive drugs	category	treatment
 wind-cold cough	categories	symptoms
 primary fibrinolysis	category	disease
 mild steatosis of the liver	categories	symptoms
-fetal distress	Types	and diseases
+fetal distress	Types	diseases
 varicose veins in the orbit	category	disease
 pediatric urine sensation	category	disease
 amniotic fluid index	category	check
@@ -8517,7 +8515,7 @@ virtual fire toothache	categories	symptoms
 granular myoblastoma of the vulva	category	disease
 histiocytosis	categories	symptoms
 basal ganglia hematoma	category	disease
-mental disorders	types	and diseases associated with hypothyroidism
+mental disorders	types	diseases associated with hypothyroidism
 swallowed foreign body	category	disease
 adult congenital dislocation of the hip	category	disease
 neck lymph node tuberculosis	category	disease
@@ -8988,7 +8986,7 @@ double auricle defect	category	symptom
 ulcer after the scar is broken	type	symptom
 gluteal sulcus drooping claudication gait	category	symptom
 ileocecal valve insufficiency	category	symptom
-mental disorders	types	and diseases associated with cancer
+mental disorders	types	diseases associated with cancer
 polypoid lesions	categories	symptoms
 nasal cyst	category	disease
 pain in the occiput and back of the neck	categories	symptoms
@@ -9235,7 +9233,7 @@ severe early pregnancy reaction	category	symptom
 biliary dilatation	category	disease
 drug-induced dermatitis	category	disease
 pediatric school phobia	category	disease
-mental disorders	types	and diseases associated with kidney disease
+mental disorders	types	diseases associated with kidney disease
 spinal cord hemisection syndrome	category	disease
 arteriovenous hemangioma	category	disease
 linear fractures	categories	symptoms
@@ -9323,12 +9321,12 @@ other limbs	categories	parts
 bilateral varicocele	category	disease
 conjunctival bleeding	categories	symptoms
 watershed area cerebral infarction	category	disease
-the appearance of the ulcer is crater-like	type	and symptoms
+the appearance of the ulcer is crater-like	type	symptoms
 chronic prostatitis	category	disease
 wet rales	category	inspection
 nail dystrophy	categories	symptoms
 vomiting and diarrhea	types	symptoms
-mental disorders	types	and diseases associated with abnormal sexual function
+mental disorders	types	diseases associated with abnormal sexual function
 respiratory acidosis in the elderly	categories	diseases
 secondary leukemia	category	disease
 cervical lifting pain	type	symptom
@@ -9422,7 +9420,7 @@ intrahumeral epicondylitis	category	disease
 diastolic tremor	categories	symptoms
 infectious laryngitis	category	disease
 orthographic chest radiograph	category	examination
-ocular lesions	categories	and diseases of sinus squamous cell carcinoma
+ocular lesions	categories	diseases of sinus squamous cell carcinoma
 collateral circulation underdevelopment	categories	symptoms
 congenital erythropoiesis anemia in children	categories	diseases
 right knee joint	category	inspection
@@ -9662,7 +9660,7 @@ breathing breath is urine smell	category	symptom
 electric shock sensation in limbs	category	symptom
 childhood blindness	categories	symptoms
 congenital torticollis in children	categories	diseases
-the pharynx has scattered gray	type	and symptoms
+the pharynx has scattered gray	type	symptoms
 proximal left upper limb	category	location
 sigmoid colon cancer	category	disease
 contusion of larynx	category	disease
@@ -10222,7 +10220,7 @@ toxic megacolon	category	symptoms
 newborns have more eye feces	categories	symptoms
 respiratory bronchiole-related interstitial lung disease	category	disease
 cemetasone injection	category	treatment
-mental disorders	types	and diseases associated with alcohol
+mental disorders	types	diseases associated with alcohol
 chromosomal abnormalities	categories	symptoms
 hockey stick player	category	symptoms
 non-ejaculation	category	disease
@@ -10262,7 +10260,7 @@ mild dull pain in the anus	category	symptom
 hydroxybutyrate dehydrogenase	category	inspection
 hereditary hemorrhagic telangiectasia	category	disease
 sepsis or more	category	symptom
-partial androgen deficiency syndrome	Types	and diseases in middle-aged and elderly men
+partial androgen deficiency syndrome	Types	diseases in middle-aged and elderly men
 blood stasis constitution	category	symptom
 primary limited localized skin amyloidosis	category	disease
 giantism and acromegaly	categories	diseases
@@ -10281,7 +10279,7 @@ pediatric idiopathic hypercalciuria	categories	diseases
 melanosis of the large intestine	Types	symptoms
 pediatric sideroblastic anemia	category	disease
 vertical eye movement disorders	categories	symptoms
-taking voyeurism as a source	category	and symptom of pleasure
+taking voyeurism as a source	category	symptom of pleasure
 hemorrhagic papules	categories	symptoms
 right zygomatic skin	category	location
 bladder injury	category	disease
@@ -10320,7 +10318,7 @@ familial exudative vitreoretinopathy	category	disease
 flattening and sagging of the gluteal groove	categories	symptoms
 skin penetrating hair follicles and perifollicular keratosis	categories	diseases
 hypovolemic shock	categories	symptoms
-chest	type	and symptoms when swallowing dry food
+chest	type	symptoms when swallowing dry food
 yellow lips	categories	symptoms
 beta receptor hyperactivity	category	disease
 obsessions	categories	symptoms
@@ -11127,7 +11125,7 @@ allergic pharyngitis	category	disease
 infant neuroblastoma	category	disease
 lumbar spinous process	category	location
 ureteral tumors	categories	diseases
-mental disorders	types	and diseases associated with digestive system diseases
+mental disorders	types	diseases associated with digestive system diseases
 acral cyanosis	categories	symptoms
 sagging breasts	categories	symptoms
 pediatric psoriasis	categories	diseases
@@ -11458,7 +11456,7 @@ acanthosis nigricans of the oral mucosa	categories	diseases
 scrofulous skin tuberculosis	category	disease
 cervical erosion	category	disease
 suddenly severe back pain	type	symptoms
-mental disorders	types	and diseases associated with leukemia
+mental disorders	types	diseases associated with leukemia
 thyroid nodule calcification	category	disease
 pruritus	category	disease
 sagging eyelids and thickening of the upper lip	categories	symptoms
@@ -11723,7 +11721,7 @@ gastroenteritis caused by rotavirus	category	disease
 osteonecrosis in adults	categories	diseases
 external auditory canal cholesteatoma	category	disease
 mild tongue vomiting	category	symptom
-sputum examination may find filamentous larvae	types	and symptoms
+sputum examination may find filamentous larvae	types	symptoms
 low ear position	category	symptoms
 enlarged pores	categories	symptoms
 glucose hormone dependence	categories	symptoms
@@ -11793,7 +11791,7 @@ orthostatic proteinuria	categories	symptoms
 atrioventricular block	category	symptoms
 chest pain when sneezing	categories	symptoms
 functional tremor	categories	symptoms
-signs	categories	and symptoms of sepsis
+signs	categories	symptoms of sepsis
 menopausal urinary incontinence	categories	diseases
 non-functioning pituitary adenoma	category	disease
 congenital intestinal malrotation	category	disease
@@ -11801,7 +11799,7 @@ chest pain	categories	symptoms
 chuanbei qingfei	category	treatment
 myasthenia gravis crisis	category	disease
 urinary disorders	categories	symptoms
-the size	type	and symptoms of rice grains on the wrist
+the size	type	symptoms of rice grains on the wrist
 pregnancy with atrial septal defect	category	disease
 swelling and tenderness of the elbow	type	symptoms
 male infertility	category	disease
@@ -11947,7 +11945,7 @@ allergic conjunctivitis	category	disease
 each metacarpophalangeal joint	category	location
 follicular cyst	category	symptoms
 lens protein allergic glaucoma	category	disease
-cardiovascular damage	categories	and diseases of acquired immunodeficiency syndrome
+cardiovascular damage	categories	diseases of acquired immunodeficiency syndrome
 bacterial skin diseases	categories	diseases
 olfactory disorders	categories	diseases
 menorrhagia in children	types	diseases
@@ -11975,7 +11973,7 @@ craniocerebral congenital malformations	categories	diseases
 diastolic airway and other drugs	categories	treatments
 drugs	categories	treatments to improve bone metabolism
 neurosyphilis	categories	diseases
-gastrointestinal manifestations	categories	and diseases of amyloidosis
+gastrointestinal manifestations	categories	diseases of amyloidosis
 unbearable thirst	categories	symptoms
 cervical lip edema	categories	symptoms
 fibrous membrane wrap	category	symptom
@@ -12365,7 +12363,7 @@ lens lytic glaucoma	category	disease
 respiratory bronchiolitis interstitial lung disease	category	disease
 congenital cystic dilatation of intrahepatic bile duct	category	disease
 orbital foreign body	category	symptoms
-oral mucosa has similarity	type	and symptoms
+oral mucosa has similarity	type	symptoms
 progressive spinal muscular atrophy	category	disease
 total autonomic insufficiency	category	disease
 neonatal pneumonia	category	disease
@@ -12402,7 +12400,7 @@ abdominal large blood vessel injury	category	disease
 traumatic internal carotid cavernous fistula	category	disease
 pulmonary encephalopathy	category	disease
 bone union of left patella fracture after surgery	category	disease
-mental disorders	types	and diseases associated with abnormal adrenal cortex function
+mental disorders	types	diseases associated with abnormal adrenal cortex function
 breast pain	categories	symptoms
 depressed eyebrow arch	category	symptom
 enterobacter cloacae infection	category	disease
@@ -12515,7 +12513,7 @@ lower extremity communicating venous valve insufficiency	category	disease
 histiocytofibroma	category	disease
 acute abdominal hyperlipidemia syndrome	category	disease
 vitreous disease	category	disease
-mental disorders	types	and diseases associated with intracranial tumors
+mental disorders	types	diseases associated with intracranial tumors
 social phobia	categories	symptoms
 sebaceous gland cancer of the eyelid	category	disease
 dystonia syndrome	category	disease
@@ -13252,7 +13250,7 @@ pregnancy with hyperthyroidism	category	disease
 outside of right knee	category	location
 pharyngeal stenosis and atresia	category	disease
 serum sickness in children	category	disease
-mental disorders	types	and diseases associated with physical illnesses
+mental disorders	types	diseases associated with physical illnesses
 vulvar naivety	categories	symptoms
 compound fresh bamboo leeks	category	treatment
 elderly sepsis	category	disease
@@ -13662,7 +13660,7 @@ non-functioning parathyroid cyst	category	disease
 disorders of conduct	categories	symptoms
 abdominal depression is scaphoid	category	symptom
 quadrilateral hole syndrome	category	disease
-mental disorders	types	and diseases associated with abnormal pituitary gland function
+mental disorders	types	diseases associated with abnormal pituitary gland function
 hepatic failure in children	categories	diseases
 haggard face and early aging	category	symptom
 pediatric atropine poisoning	category	disease
