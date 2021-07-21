@@ -7,6 +7,9 @@ import brain.config as config
 import pkuseg
 import numpy as np
 from transformers import AutoTokenizer
+from rapidfuzz import fuzz, process
+
+from utils.stop_words.stop_words import StopWords
 
 
 class KnowledgeGraph(object):
@@ -24,6 +27,9 @@ class KnowledgeGraph(object):
         elif lang == "en":
             self.tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased", use_fast=True)
         self.special_tags = set(config.NEVER_SPLIT_TAG)
+
+        # Import stop words filter
+        self.stop_words = StopWords()
 
     def _create_lookup_table(self):
         lookup_table = {}
@@ -184,18 +190,40 @@ class KnowledgeGraph(object):
             concatenated_entity = []
             for i in range(len(sent)):
                 word = sent[i]
+                next_word = sent[i + 1] if i != max_iter else ""
                 to_lookup = word
 
                 label = labels[i]
-                next_label = labels[i + 1] if i != max_iter else "O"
 
-                if label.startswith(starts[start_idx]):
-                    concatenated_entity.append(word)
-                    start_idx = 1
-                if len(concatenated_entity) != 0 and next_label.startswith(("B-", "O")):
-                    to_lookup = " ".join(concatenated_entity)
-                    start_idx = 0
+                # Concstenate possible entities
+                concatenated_entity.append(word)
+
+                # Discard possible entity if it starts with a stop word, else calculate the score
+                if concatenated_entity[0] in self.stop_words.en:
+                    score = 0
                     concatenated_entity = []
+                else:
+                    concatenated_entity_str = " ".join(concatenated_entity)
+                    best_match, score, _ = process.extractOne(
+                        concatenated_entity_str, self.lookup_table.keys(), scorer=fuzz.ratio
+                    )
+
+                # Keep concatenation only if score is above 60% threshold, else check score with next word
+                if score < 60 or len(concatenated_entity) > 10:  # for safety
+                    concatenated_entity = []
+                else:
+                    # Vheck if we have a better match with the next word
+                    _, next_score, _ = process.extractOne(
+                        concatenated_entity_str + " " + next_word, self.lookup_table.keys(), scorer=fuzz.ratio
+                    )
+
+                # Replace to looup only if score is greater than 95% threshold and next score is lower
+                if score > 95 and next_score < score:
+                    to_lookup = best_match
+                    concatenated_entity = []
+
+                # Safety for unwanted entities (probably due to a parsing error when building the lookup table)
+                to_lookup = "" if to_lookup == "part" else to_lookup
 
                 entities = list(self.lookup_table.get(to_lookup, []))
                 n_ent_found += len(entities)
