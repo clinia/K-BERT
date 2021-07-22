@@ -185,8 +185,6 @@ class KnowledgeGraph(object):
             abs_idx_src = []
             new_labels = []
             max_iter = len(sent) - 1
-            starts = ["B-", "I-"]
-            start_idx = 0
             concatenated_entity = []
             for i in range(len(sent)):
                 word = sent[i]
@@ -195,32 +193,33 @@ class KnowledgeGraph(object):
 
                 label = labels[i]
 
-                # Concstenate possible entities
-                concatenated_entity.append(word)
+                if self.lookup_table:
+                    # Concstenate possible entities
+                    concatenated_entity.append(word)
 
-                # Discard possible entity if it starts with a stop word, else calculate the score
-                if concatenated_entity[0] in self.stop_words.en:
-                    score = 0
-                    concatenated_entity = []
-                else:
-                    concatenated_entity_str = " ".join(concatenated_entity)
-                    best_match, score, _ = process.extractOne(
-                        concatenated_entity_str, self.lookup_table.keys(), scorer=fuzz.ratio
-                    )
+                    # Discard possible entity if it starts with a stop word, else calculate the score
+                    if concatenated_entity[0] in self.stop_words.en:
+                        score = 0
+                        concatenated_entity = []
+                    else:
+                        concatenated_entity_str = " ".join(concatenated_entity)
+                        best_match, score, _ = process.extractOne(
+                            concatenated_entity_str, self.lookup_table.keys(), scorer=fuzz.ratio
+                        )
 
-                # Keep concatenation only if score is above 60% threshold, else check score with next word
-                if score < 60 or len(concatenated_entity) > 10:  # for safety
-                    concatenated_entity = []
-                else:
-                    # Vheck if we have a better match with the next word
-                    _, next_score, _ = process.extractOne(
-                        concatenated_entity_str + " " + next_word, self.lookup_table.keys(), scorer=fuzz.ratio
-                    )
+                    # Keep concatenation only if score is above 60% threshold, else check score with next word
+                    if score < 60 or len(concatenated_entity) > 10:  # for safety
+                        concatenated_entity = []
+                    else:
+                        # Vheck if we have a better match with the next word
+                        _, next_score, _ = process.extractOne(
+                            concatenated_entity_str + " " + next_word, self.lookup_table.keys(), scorer=fuzz.ratio
+                        )
 
-                # Replace to looup only if score is greater than 95% threshold and next score is lower
-                if score > 95 and next_score < score:
-                    to_lookup = best_match
-                    concatenated_entity = []
+                    # Replace to looup only if score is greater than 95% threshold and next score is lower
+                    if score > 95 and next_score < score:
+                        to_lookup = best_match
+                        concatenated_entity = []
 
                 # Safety for unwanted entities (probably due to a parsing error when building the lookup table)
                 to_lookup = "" if to_lookup == "part" else to_lookup

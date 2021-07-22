@@ -288,14 +288,6 @@ def main(special_args=None):
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
 
     print("Start evaluation.")
-    print("Batch size: ", batch_size)
-    print("The number of training instances:", instances_num)
-
-    # if torch.cuda.device_count() > 1:
-    #     model.module.load_state_dict(torch.load(args.output_model_path))
-    # else:
-    #     model.load_state_dict(torch.load(args.output_model_path))
-
     evaluate(test_loader, args)
 
 
