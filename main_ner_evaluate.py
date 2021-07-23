@@ -30,7 +30,7 @@ class NERKBERTArgs:
             self.labels_path = "datasets/clinia_ner/ser_bus/labels.csv"
 
         if model == 1:
-            self.pretrained_model_path = "./outputs/kbert_medical_ner_Medical_en_dataset_base.bin"  # "./models/en/bert_base_uncased/pytorch_model.bin"
+            self.pretrained_model_path = "./outputs/kbert_medical_ner_Medical_en_dataset_entity.bin"  # "./models/en/bert_base_uncased/pytorch_model.bin"
             self.config_path = "./models/en/bert_base_uncased/config.json"
             self.vocab_path = "./models/en/bert_base_uncased/vocab.txt"
             self.tokenizer_config = "./models/en/bert_base_uncased/tokeniser_config.json"
