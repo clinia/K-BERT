@@ -53,19 +53,18 @@ class EvalKBERTEMbeddings(EvaluateEmbeddings):
 
             ## Separate embeddings
             # Remove special token indexes from token_tyoe_ids
-            # first segment
             token_type_ids = torch.where(
                 ((input_ids == 101) | (input_ids == 102) | (input_ids == 0)), 0, token_type_ids
             )
 
-            ## Select embeddings
+            # Gather and process embeddings that do not contain special tokens
             emb1 = ctx_emb[token_type_ids == 1, :]
-            n_sub_tokens = torch.sum(token_type_ids, dim=1)
+            n_sub_tokens = torch.sum(token_type_ids, dim=1)  # Nb of tokens to sum together for each entity
 
             ent_emb_i = []
             for n in n_sub_tokens:
-                tmp = emb1[: int(n)].sum(0)
-                emb1 = emb1[int(n) :]
+                tmp = emb1[: int(n)].sum(0)  # get tokens
+                emb1 = emb1[int(n) :]  # remove from tensor to process sequentially the entities in the batch
                 ent_emb_i.append(tmp)
 
             ent_emb.append(torch.stack(ent_emb_i))
