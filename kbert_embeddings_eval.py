@@ -180,7 +180,7 @@ def main(DATA_PATH, EXPORT_PATH, special_args=None):
 
     tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased", use_fast=True)
 
-    evaluator = EvalKBERTEMbeddings(DATA_PATH=DATA, batch_size=10, seq_len=30)
+    evaluator = EvalKBERTEMbeddings(DATA_PATH=DATA_PATH, batch_size=10, seq_len=30)
     results = evaluator.evaluate(model, tokenizer)
 
     evaluator.export(results=results, EXPORT_PATH=EXPORT_PATH)
