@@ -2,7 +2,7 @@ from run_kbert_ner import main
 
 
 class NERKBERTArgs:
-    def __init__(self) -> None:
+    def __init__(self, model=1) -> None:
 
         """
         Choose model:
@@ -14,7 +14,6 @@ class NERKBERTArgs:
         ENGLISH MODEL WITH CLINIA KG: 1
 
         """
-        model = 2
 
         if model == 0:
             self.pretrained_model_path = "./models/pytorch_model.bin"
@@ -63,5 +62,5 @@ class NERKBERTArgs:
 
 
 if __name__ == "__main__":
-    args = NERKBERTArgs()
+    args = NERKBERTArgs(model=2)
     main(args)
